@@ -2,11 +2,12 @@ package com.asciugano.engine.display;
 
 import java.nio.IntBuffer;
 
+import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.renderer.Loader;
-import com.asciugano.engine.renderer.RawModel;
+import com.asciugano.engine.models.RawModel;
 import com.asciugano.engine.renderer.Renderer;
 import com.asciugano.engine.shaders.StaticShader;
-import org.joml.Matrix4f;
+import com.asciugano.engine.textures.ModelTexture;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
@@ -99,14 +100,23 @@ public class DisplayManager {
                 3, 1, 2
         };
 
-        RawModel model = loader.loadToVAO(vertices, indices);
+        float[] textureCoords = {
+                0, 0,
+                0, 1,
+                1, 1,
+                1, 0
+        };
+
+        RawModel model = loader.loadToVAO(vertices, textureCoords, indices);
+        ModelTexture texture = new ModelTexture(loader.loadTexture("img.png"));
+        TexturedModel texturedModel = new TexturedModel(model, texture);
 
         while ( !glfwWindowShouldClose(window) ) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             shader.start();
 
-            renderer.render(model);
+            renderer.render(texturedModel);
 
             shader.stop();
 

@@ -1,8 +1,11 @@
 package com.asciugano.engine.renderer;
 
+import com.asciugano.engine.models.RawModel;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryUtil;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -14,13 +17,17 @@ import static org.lwjgl.opengl.GL30.*;
 
 public class Loader {
 
+    private static final String TEXTURE_PATH = "src/main/resources/textures/";
+
     private List<Integer> vaos = new ArrayList<>();
     private List<Integer> vbos = new ArrayList<>();
+    private List<Integer> textures = new ArrayList<>();
 
-    public RawModel loadToVAO(float[] position, int[] indices) {
+    public RawModel loadToVAO(float[] position, float[] textureCoords, int[] indices) {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
         storeDataInAttributeList(0, 3, position);
+        storeDataInAttributeList(1, 2, textureCoords);
         unbindVAO();
 
         return new RawModel(vaoID, indices.length);
@@ -52,6 +59,44 @@ public class Loader {
         MemoryUtil.memFree(buffer);
     }
 
+    public int loadTexture(String fileName) {
+        int width, height;
+        ByteBuffer image;
+
+        try {
+            IntBuffer w = BufferUtils.createIntBuffer(1);
+            IntBuffer h = BufferUtils.createIntBuffer(1);
+            IntBuffer comp = BufferUtils.createIntBuffer(1);
+
+            image = STBImage.stbi_load(TEXTURE_PATH + fileName, w, h, comp, 4);
+
+            if (image == null) {
+                System.out.println("Failed to load texture: " + fileName);
+                throw new RuntimeException("Failed to load texture: " + fileName);
+            }
+
+            width = w.get();
+            height = h.get();
+
+            MemoryUtil.memFree(w);
+            MemoryUtil.memFree(h);
+            MemoryUtil.memFree(comp);
+        } catch(Exception e) {
+            throw new RuntimeException("Failed to load texture: " + fileName, e);
+        }
+            int textureID = glGenTextures();
+            textures.add(textureID);
+
+            glBindTexture(GL_TEXTURE_2D, textureID);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+
+            glGenerateMipmap(GL_TEXTURE_2D);
+
+            STBImage.stbi_image_free(image);
+
+            return textureID;
+    }
+
     private void bindIndicesBuffer(int[] indices) {
         int vboID = glGenBuffers();
         vbos.add(vboID);
@@ -73,5 +118,6 @@ public class Loader {
     public void cleanUp() {
         for(int vao : vaos) glDeleteVertexArrays(vao);
         for(int vbo : vbos) glDeleteBuffers(vbo);
+        for(int textures : textures) glDeleteTextures(textures);
     }
 }

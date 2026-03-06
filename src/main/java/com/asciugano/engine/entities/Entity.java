@@ -1,6 +1,6 @@
 package com.asciugano.engine.entities;
 
-import com.asciugano.engine.renderer.TexturedModel;
+import com.asciugano.engine.models.TexturedModel;
 import org.joml.Vector3f;
 
 public class Entity {

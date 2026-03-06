@@ -1,4 +1,6 @@
-package com.asciugano.engine.renderer;
+package com.asciugano.engine.models;
+
+import com.asciugano.engine.textures.ModelTexture;
 
 public class TexturedModel {
 

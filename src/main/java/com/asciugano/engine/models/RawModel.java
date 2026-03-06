@@ -1,4 +1,4 @@
-package com.asciugano.engine.renderer;
+package com.asciugano.engine.models;
 
 public class RawModel {
     private int vaoID;

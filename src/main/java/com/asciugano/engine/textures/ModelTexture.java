@@ -1,4 +1,4 @@
-package com.asciugano.engine.renderer;
+package com.asciugano.engine.textures;
 
 public class ModelTexture {
     private int textureID;
