@@ -27,6 +27,9 @@ public class DisplayManager {
     private static final int WIDTH = 1280;
     private static final int HEIGHT = 720;
 
+    public static int getWidth() { return WIDTH; }
+    public static int getHeight() { return HEIGHT; }
+
     public void run() {
         init();
         loop();
@@ -78,7 +81,6 @@ public class DisplayManager {
 
             glfwGetWindowSize(window, pWidth, pHeight);
 
-//            GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
             GLFWVidMode vidmode = glfwGetVideoMode(getExternalMonitor());
 
             glfwSetWindowPos(
@@ -104,8 +106,8 @@ public class DisplayManager {
         glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
 
         Loader loader = new Loader();
-        Renderer renderer = new Renderer();
         StaticShader shader = new StaticShader();
+        Renderer renderer = new Renderer(shader);
 
         float[] vertices = {
                 -0.5f, 0.5f, 0,
@@ -129,11 +131,11 @@ public class DisplayManager {
         ModelTexture texture = new ModelTexture(loader.loadTexture("img.png"));
         TexturedModel texturedModel = new TexturedModel(model, texture);
 
-        Entity entity = new Entity(texturedModel, new Vector3f(-1, 0, 0), new Vector3f(0, 0, 0), 1);
+        Entity entity = new Entity(texturedModel, new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), 1);
 
         while ( !glfwWindowShouldClose(window) ) {
-            entity.increasePosition(new Vector3f(0.002f, 0, 0));
-            entity.increaseRotation(new Vector3f(0, 1, 0));
+            entity.increasePosition(new Vector3f(0, 0, -0.02f));
+//            entity.increaseRotation(new Vector3f(0, 1, 0));
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
