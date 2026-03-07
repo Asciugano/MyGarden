@@ -1,6 +1,5 @@
 package com.asciugano.engine.renderer;
 
-import com.asciugano.engine.display.DisplayManager;
 import com.asciugano.engine.entities.Entity;
 import com.asciugano.engine.models.RawModel;
 import com.asciugano.engine.models.TexturedModel;
@@ -18,32 +17,20 @@ import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
-public class Renderer {
+public class EntityRenderer {
 
-    private static final float FOV = 70;
-    private static final float NEAR_PLANE = 0.1f;
-    private static final float FAR_PLANE = 1000.0f;
-
-    private Matrix4f projectionMatrix;
 
     private StaticShader shader;
 
-    public Renderer(StaticShader shader) {
+    public EntityRenderer(StaticShader shader, Matrix4f projectionMatrix) {
         this.shader = shader;
-        createProjectionMatrix();
         shader.start();
         shader.loadProjectionMatrix(projectionMatrix);
         shader.stop();
     }
 
-    public void prepare() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    }
-
     public void render(Map<TexturedModel, List<Entity>> entities) {
 //        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glEnable(GL_CULL_FACE);
-        glEnable(GL_BACK);
         for(TexturedModel model : entities.keySet()) {
             prepareTexturedModel(model);
             List<Entity> batch = entities.get(model);
@@ -134,15 +121,4 @@ public class Renderer {
 //
 //        glBindVertexArray(0);
 //    }
-
-    private void createProjectionMatrix() {
-        float aspectRatio = (float) DisplayManager.getWidth() / (float) DisplayManager.getHeight();
-
-        projectionMatrix = new Matrix4f().perspective(
-                FOV,
-                aspectRatio,
-                NEAR_PLANE,
-                FAR_PLANE
-        );
-    }
 }

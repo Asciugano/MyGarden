@@ -10,8 +10,7 @@ import com.asciugano.engine.renderer.Loader;
 import com.asciugano.engine.models.RawModel;
 import com.asciugano.engine.renderer.MasterRenderer;
 import com.asciugano.engine.renderer.OBJLoader;
-import com.asciugano.engine.renderer.Renderer;
-import com.asciugano.engine.shaders.StaticShader;
+import com.asciugano.engine.terrains.Terrain;
 import com.asciugano.engine.textures.ModelTexture;
 import org.joml.Vector3f;
 import org.lwjgl.PointerBuffer;
@@ -124,6 +123,8 @@ public class DisplayManager {
 
         Camera camera = new Camera();
         Light light = new Light(new Vector3f(0, 0, -20), new Vector3f(1, 1, 1));
+        Terrain terrain = new Terrain(0, 0, loader, new ModelTexture(loader.loadTexture("grass.png")));
+        Terrain terrain2 = new Terrain(1, 0, loader, new ModelTexture(loader.loadTexture("grass.png")));
 
         while ( !glfwWindowShouldClose(window) ) {
 //            entity.increasePosition(new Vector3f(0, 0, -0.02f));
@@ -132,6 +133,8 @@ public class DisplayManager {
 //            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
+            masterRenderer.processTerrains(terrain);
+            masterRenderer.processTerrains(terrain2);
             masterRenderer.processEntities(entity);
 
             masterRenderer.render(light, camera);

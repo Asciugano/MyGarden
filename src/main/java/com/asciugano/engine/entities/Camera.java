@@ -4,13 +4,12 @@ import com.asciugano.engine.display.DisplayManager;
 import org.joml.Vector3f;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 
 public class Camera {
 
-    private Vector3f position = new Vector3f(0, 0, 0);
+    private Vector3f position = new Vector3f(0, 5, 0);
     private float pitch;
-    private float yaw;
+    private float yaw = 180;
     private float roll;
 
     public void move() {
