@@ -28,7 +28,7 @@ public class Camera extends Entity {
 
     public void move() {
         calculateZoom();
-        calculatePitch();
+//        calculatePitch();
         calculateAngleAroundTarget();
         calculatePan();
 
@@ -58,16 +58,28 @@ public class Camera extends Entity {
     }
 
     private void calculatePan() {
-        if(MouseHandler.LEFT_PRESSED) {
-            float yawRad = (float) Math.toRadians(yaw);
+        if(MouseHandler.RIGHT_PRESSED) {
+            Vector3f targetRotation = target.getComponent(TransformationComponent.class).getRotation();
+            float angle = targetRotation.y + angleAroundTarget;
+            float rad = (float) Math.toRadians(angle);
 
-            Vector3f right = new Vector3f((float) Math.cos(yawRad), 0, -(float) Math.sin(yawRad));
-            Vector3f forward = new Vector3f((float) Math.sin(yawRad), 0, -(float) Math.cos(yawRad));
+            Vector3f forward = new Vector3f(
+                    (float) Math.sin(rad),
+                    0,
+                    (float) Math.cos(rad)
+            ).normalize();
 
-            right.mul(-MouseHandler.dx * PAN_SPEED);
-            forward.mul(MouseHandler.dy * PAN_SPEED);
+            Vector3f right = new Vector3f(
+                    forward.z,
+                    0,
+                    -forward.x
+            ).normalize();
 
-            panOffset.add(right).add(forward);
+            Vector3f moveRight = new Vector3f(right).mul(MouseHandler.dx * PAN_SPEED);
+            Vector3f moveForward = new Vector3f(forward).mul(MouseHandler.dy * PAN_SPEED);
+
+            panOffset.add(moveRight);
+            panOffset.add(moveForward);
         }
     }
 
