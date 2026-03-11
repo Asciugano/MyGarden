@@ -65,9 +65,13 @@ public class MasterRenderer {
         entities.clear();
     }
 
+    /**
+     *
+     * @param lights per adesso inutilizzato per non avere ombre strane
+     * @param camera
+     */
     private void renderTile(Light lights, Camera camera) {
         tileShader.start();
-        tileShader.loadLights(lights);
         tileShader.loadViewMatrix(camera);
 
         tileRenderer.render(tiles);

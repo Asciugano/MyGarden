@@ -30,8 +30,8 @@ public class Terrain {
         for(int x = 0; x < SIZE; x++) {
             for(int z = 0; z < SIZE; z++) {
                 TileType type = TileType.GRASS_TYPE;
-//                if(z % 2 == 0 || x % 2 == 0)
-//                    type = TileType.PATH_TYPE;
+                if((x + z) % 2 == 0)
+                    type = TileType.PATH_TYPE;
 
                 float worldX = x * Tile.getTileSize() - offset;
                 float worldZ = z * Tile.getTileSize() - offset;

@@ -23,10 +23,6 @@ public class TileShader extends ShaderProgram {
 
     private int location_textureSampler;
 
-    private int location_lightPosition;
-    private int location_lightColor;
-    private int location_attenuation;
-
     public TileShader() { super(VERTEX_FILE, FRAGMENT_FILE); }
 
     @Override
@@ -43,21 +39,11 @@ public class TileShader extends ShaderProgram {
         location_viewMatrix = super.getUniformLocation("viewMatrix");
 
         location_textureSampler = super.getUniformLocation("textureSampler");
-
-            location_lightPosition = super.getUniformLocation("lightPosition");
-            location_lightColor = super.getUniformLocation("lightColor");
-            location_attenuation = super.getUniformLocation("attenuation");
     }
 
     public void loadTransformationMatrix(Matrix4f matrix) {
         super.loadMatrix(location_transformationMatrix, matrix);
     }
-
-    public void loadLights(Light light) {
-        super.loadVector3(location_lightPosition, light.getPosition());
-        super.loadVector3(location_lightColor, light.getColor());
-        super.loadVector3(location_attenuation, light.getAttenuation());
-        }
 
     public void loadViewMatrix(Camera camera) {
         super.loadMatrix(location_viewMatrix, Maths.createViewMatrix(camera));
