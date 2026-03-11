@@ -92,8 +92,8 @@ public class Loader {
             image = STBImage.stbi_load(TEXTURE_PATH + fileName, w, h, comp, 4);
 
             if (image == null) {
-                System.out.println("Failed to load texture: " + fileName);
-                throw new RuntimeException("Failed to load texture: " + fileName);
+                System.out.println("Failed to load texture: "+ TEXTURE_PATH + fileName);
+                throw new RuntimeException("Failed to load texture: " + TEXTURE_PATH + fileName);
             }
 
             width = w.get();

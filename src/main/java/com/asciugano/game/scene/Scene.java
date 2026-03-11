@@ -1,5 +1,9 @@
 package com.asciugano.game.scene;
 
+import com.asciugano.engine.UIManager.UIRenderer;
+import com.asciugano.engine.UIManager.UIShader;
+import com.asciugano.engine.UIManager.UITexture;
+import com.asciugano.engine.components.UIComponent;
 import com.asciugano.engine.entities.Camera;
 import com.asciugano.engine.entities.Entity;
 import com.asciugano.engine.entities.Light;
@@ -7,7 +11,10 @@ import com.asciugano.engine.handlers.mouse.MousePicker;
 import com.asciugano.engine.renderer.Loader;
 import com.asciugano.engine.renderer.MasterRenderer;
 import com.asciugano.engine.terrains.Terrain;
+import com.asciugano.engine.utils.Color;
+import com.asciugano.game.UI.TileSelector;
 import com.asciugano.game.entity.tiles.Tile;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -20,7 +27,10 @@ public class Scene {
     private List<Entity> entities = new ArrayList<>();
 
     private MasterRenderer masterRenderer;
+    private UIRenderer uiRenderer;
+    private List<UITexture> uis = new ArrayList<>();
     private MousePicker mousePicker;
+    private TileSelector tileSelector;
 
     public Scene(Loader loader) {
         terrains.add(new Terrain(loader));
@@ -31,6 +41,18 @@ public class Scene {
         this.masterRenderer = new MasterRenderer(loader);
         // TODO: fixare in futuro per quando si avranno piu terrains
         mousePicker = new MousePicker(camera, masterRenderer.getProjectionMatrix(), terrains.get(0));
+
+        tileSelector = new TileSelector(
+                new UITexture(
+                        loader.loadTexture("UITextures/selector.png"),
+                        new Vector2f(0, 0),
+                        new Vector2f(0.1f, 0.1f)
+                ),
+                new Color(1, 1, 1)
+        );
+        uiRenderer = new UIRenderer(loader);
+        uis.add(tileSelector.getComponent(UIComponent.class).getUi());
+
     }
 
     public Scene(Loader loader, Light light, Camera camera, List<Terrain> terrains, List<Entity> entities) {
@@ -55,6 +77,7 @@ public class Scene {
     public void update(float dt) {
         mousePicker.update();
         camera.move();
+        tileSelector.update(dt, mousePicker.getCurrentTile());
 
         for(Entity entity : entities) {
             entity.update(dt);
@@ -77,6 +100,7 @@ public class Scene {
         }
 
         masterRenderer.render(light, camera);
+        uiRenderer.render(uis);
     }
 
     public Light getLight() { return light; }
