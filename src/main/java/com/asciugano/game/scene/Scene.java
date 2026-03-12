@@ -1,5 +1,6 @@
 package com.asciugano.game.scene;
 
+import com.asciugano.engine.UIManager.UIEntity;
 import com.asciugano.engine.UIManager.UIRenderer;
 import com.asciugano.engine.UIManager.UIShader;
 import com.asciugano.engine.UIManager.UITexture;
@@ -28,7 +29,7 @@ public class Scene {
 
     private MasterRenderer masterRenderer;
     private UIRenderer uiRenderer;
-    private List<UITexture> uis = new ArrayList<>();
+    private List<UIEntity> uis = new ArrayList<>();
     private MousePicker mousePicker;
     private TileSelector tileSelector;
 
@@ -48,11 +49,10 @@ public class Scene {
                         new Vector2f(0, 0),
                         new Vector2f(0.1f, 0.1f)
                 ),
-                new Color(1, 1, 1)
+                Color.WHITE
         );
         uiRenderer = new UIRenderer(loader);
-        uis.add(tileSelector.getComponent(UIComponent.class).getUi());
-
+        uis.add(tileSelector);
     }
 
     public Scene(Loader loader, Light light, Camera camera, List<Terrain> terrains, List<Entity> entities) {
@@ -64,6 +64,17 @@ public class Scene {
         this.masterRenderer = new MasterRenderer(loader);
         // TODO: fixare in futuro per qundo si avranno piu terrains
         mousePicker = new MousePicker(camera, masterRenderer.getProjectionMatrix(), terrains.get(0));
+
+        tileSelector = new TileSelector(
+                new UITexture(
+                        loader.loadTexture("UITextures/selector.png"),
+                        new Vector2f(0, 0),
+                        new Vector2f(0.1f, 0.1f)
+                ),
+                Color.WHITE
+        );
+        uiRenderer = new UIRenderer(loader);
+        uis.add(tileSelector);
     }
 
     public void addEntity(Entity entity) {
@@ -77,7 +88,11 @@ public class Scene {
     public void update(float dt) {
         mousePicker.update();
         camera.move();
-        tileSelector.update(dt, mousePicker.getCurrentTile());
+        for(UIEntity uiEntity : uis) {
+            if(uiEntity == tileSelector)
+                tileSelector.update(dt, mousePicker.getCurrentTile());
+            uiEntity.update(dt);
+        }
 
         for(Entity entity : entities) {
             entity.update(dt);

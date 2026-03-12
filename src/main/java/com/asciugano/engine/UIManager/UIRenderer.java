@@ -1,5 +1,6 @@
 package com.asciugano.engine.UIManager;
 
+import com.asciugano.engine.components.TransformationComponent;
 import com.asciugano.engine.models.RawModel;
 import com.asciugano.engine.renderer.Loader;
 import com.asciugano.engine.utils.Maths;
@@ -35,7 +36,7 @@ public class UIRenderer {
         shader = new UIShader();
     }
 
-    public void render(List<UITexture> uis) {
+    public void render(List<UIEntity> uis) {
         glBindVertexArray(quad.getVaoID());
         glEnableVertexAttribArray(0);
         glEnable(GL_BLEND);
@@ -44,11 +45,12 @@ public class UIRenderer {
 
         shader.start();
 
-        for (UITexture ui : uis) {
+        for (UIEntity ui : uis) {
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, ui.getTexture());
+            glBindTexture(GL_TEXTURE_2D, ui.getUI().getTexture());
 
             shader.loadTransformationMatrix(Maths.createTransformationMatrix(ui.getPosition(), ui.getScale()));
+            shader.loadColor(ui.getColor());
 
             glDrawArrays(GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
         }

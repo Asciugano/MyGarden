@@ -14,6 +14,7 @@ public class TransformationComponent implements Component {
     }
 
     public Vector3f getPosition() { return position; }
+    public void setPosition(Vector3f position) { this.position = position; }
 
     public Vector3f getRotation() { return rotation; }
 

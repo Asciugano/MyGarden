@@ -48,7 +48,7 @@ public class MousePicker {
         currentRay = calculateMouseRay();
 
         if (intersectionInRange(0f, RAY_RANGE, currentRay)) {
-            currentTerrainPoint = binarySearch(0, 0f, RAY_RANGE, currentRay);
+            currentTerrainPoint = binarySearch(1, 0f, RAY_RANGE, currentRay);
         } else {
             currentTerrainPoint = new Vector3f(0, 0, 0);
         }
