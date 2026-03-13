@@ -49,7 +49,6 @@ public class TileRenderer {
         glBindVertexArray(rawModel.getVaoID());
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
-        glEnableVertexAttribArray(2);
 
         shader.connectTextureUnits();
 
@@ -61,7 +60,6 @@ public class TileRenderer {
         MasterRenderer.enableCulling();
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
-        glDisableVertexAttribArray(2);
         glBindVertexArray(0);
     }
 
@@ -70,12 +68,8 @@ public class TileRenderer {
                     Maths.createTransformationMatrix(
                             tile.getWorldPos(),
                             new Vector3f(0, 0, 0),
-                            1
+                            Tile.getTileSize()
                     )
             );
-    }
-
-    public void clenUp() {
-        shader.cleanUp();
     }
 }

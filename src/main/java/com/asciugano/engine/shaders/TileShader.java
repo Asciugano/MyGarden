@@ -1,16 +1,10 @@
 package com.asciugano.engine.shaders;
 
 import com.asciugano.engine.entities.Camera;
-import com.asciugano.engine.entities.Light;
 import com.asciugano.engine.utils.Maths;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
-
-import java.util.List;
 
 public class TileShader extends ShaderProgram {
-
-    private static final int MAX_LIGHTS = 4;
 
     private static final String PATH = "src/main/resources/shaders/";
 
@@ -29,7 +23,6 @@ public class TileShader extends ShaderProgram {
     protected void bindAttributes() {
         bindAttribute(0, "position");
         bindAttribute(1, "textureCoords");
-        bindAttribute(2, "normal");
     }
 
     @Override

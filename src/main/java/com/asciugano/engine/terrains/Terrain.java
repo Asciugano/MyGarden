@@ -35,7 +35,8 @@ public class Terrain {
 
                 float worldX = x * Tile.getTileSize() - offset;
                 float worldZ = z * Tile.getTileSize() - offset;
-                tiles[x][z] = new Tile(loader, type, worldX, worldZ, x, z);
+                tiles[x][z] = new Tile(loader, type, worldX, worldZ);
+                System.out.println("x: " + tiles[x][z].getWorldPos().x + " z: " + tiles[x][z].getWorldPos().z + " type: " + tiles[x][z].getTileType());
             }
         }
     }

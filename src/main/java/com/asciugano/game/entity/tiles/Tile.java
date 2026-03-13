@@ -14,9 +14,9 @@ public class Tile {
     private TileType tileType;
     private TexturedModel model;
 
-    public Tile(Loader loader, TileType tileType, float x, float z, int gridX, int gridZ) {
+    public Tile(Loader loader, TileType tileType, float x, float z) {
         this.gridX = (int) (x / Tile.getTileSize() + ((float) (Terrain.getSize() * TILE_SIZE) / 2));
-        this.gridZ = (int) (x / Tile.getTileSize() + ((float) (Terrain.getSize() * TILE_SIZE) / 2));
+        this.gridZ = (int) (z / Tile.getTileSize() + ((float) (Terrain.getSize() * TILE_SIZE) / 2));
         this.tileType = tileType;
 
         createModel(loader);
@@ -53,7 +53,7 @@ public class Tile {
         model = new TexturedModel(
                 loader.loadToVAO(
                         vertices, normals, textureCoords,  indices),
-                new ModelTexture( loader.loadTexture(tileType.getTextureName()))
+                new ModelTexture(loader.loadTexture(tileType.getTextureName()))
         );
     }
 
@@ -74,4 +74,7 @@ public class Tile {
     }
 
     public TexturedModel getModel() { return model; }
+
+    public TileType getTileType() { return tileType; }
+    public void setTileType(TileType tileType) { this.tileType = tileType; }
 }
