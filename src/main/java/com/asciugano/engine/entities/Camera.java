@@ -4,7 +4,7 @@ import com.asciugano.engine.handlers.mouse.MouseHandler;
 import com.asciugano.game.entity.tiles.Tile;
 import org.joml.Vector3f;
 
-public class Camera extends Entity {
+public class Camera {
 
     private Vector3f position;
     private float pitch = 20;
@@ -58,7 +58,7 @@ public class Camera extends Entity {
 
     private void calculatePan() {
         if(MouseHandler.RIGHT_PRESSED) {
-            Vector3f targetRotation = target.getComponent(TransformationComponent.class).getRotation();
+            Vector3f targetRotation = new Vector3f(0, 0, 0);
             float angle = targetRotation.y + angleAroundTarget;
             float rad = (float) Math.toRadians(angle);
 
@@ -100,18 +100,16 @@ public class Camera extends Entity {
 
     private void calculateCameraPosition(float horizDistance, float vertDistance) {
         if(target != null) {
-            if (target.getComponent(TransformationComponent.class) != null) {
-                Vector3f rotation = target.getComponent(TransformationComponent.class).getRotation();
-                float angle = rotation.y + angleAroundTarget;
-                float xOffset = (float) (horizDistance * Math.sin(Math.toRadians(angle)));
-                float zOffset = (float) (horizDistance * Math.cos(Math.toRadians(angle)));
+            Vector3f rotation = new Vector3f(0, 0, 0);
+            float angle = rotation.y + angleAroundTarget;
+            float xOffset = (float) (horizDistance * Math.sin(Math.toRadians(angle)));
+            float zOffset = (float) (horizDistance * Math.cos(Math.toRadians(angle)));
 
-                Vector3f targetPosition = target.getComponent(TransformationComponent.class).getPosition();
-                position.x = targetPosition.x - xOffset + panOffset.x;
-                position.z = targetPosition.z - zOffset + panOffset.z;
+            Vector3f targetPosition = target.getWorldPos();
+            position.x = targetPosition.x - xOffset + panOffset.x;
+            position.z = targetPosition.z - zOffset + panOffset.z;
 
-                position.y = targetPosition.y + vertDistance;
-            }
+            position.y = targetPosition.y + vertDistance;
         }
     }
 

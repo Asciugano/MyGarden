@@ -13,17 +13,14 @@ public class TileSelector extends UIEntity {
 
     public TileSelector(UITexture ui, Vector3f color) {
         super(ui, color, new Vector2f(1, 1));
-        addComponent(new UIComponent(ui, color));
-        addComponent(new ClickableComponent(this::onClick));
     }
 
     private void onClick() {
-        selectedTile.getComponent(ClickableComponent.class).getOnClick().run();
     }
 
     public void update(float dt, Tile newTile) {
         if(newTile != null) {
-            Vector3f tilePos = newTile.getComponent(TransformationComponent.class).getPosition();
+            Vector3f tilePos = new Vector3f(0, 0, 0);
             this.position = new Vector2f(tilePos.x, tilePos.z);
             selectedTile = newTile;
         } else if(selectedTile != null) {

@@ -6,7 +6,7 @@ import com.asciugano.engine.terrains.Terrain;
 import com.asciugano.engine.textures.ModelTexture;
 import org.joml.Vector3f;
 
-public class Tile extends ComponentUser {
+public class Tile {
     private static final int TILE_SIZE = 4;
     public static int getTileSize() { return TILE_SIZE; }
 
@@ -19,10 +19,7 @@ public class Tile extends ComponentUser {
         this.gridZ = (int) (x / Tile.getTileSize() + ((float) (Terrain.getSize() * TILE_SIZE) / 2));
         this.tileType = tileType;
 
-        this.model = createModel(loader);
-        addComponent(new TransformationComponent(new Vector3f(x, 0, z), new Vector3f(0, 0, 0), TILE_SIZE));
-        addComponent(new ClickableComponent(this::onClick));
-        addComponent(new RenderComponent(model));
+        createModel(loader);
     }
 
     public Tile(Loader loader, TileType tileType, int gridX, int gridZ) {
@@ -30,14 +27,10 @@ public class Tile extends ComponentUser {
         this.gridZ = gridZ;
         this.tileType = tileType;
 
-        this.model = createModel(loader);
-
-        addComponent(new TransformationComponent(Terrain.getPositionFromGrid(gridX, gridZ), new Vector3f(0, 0, 0), TILE_SIZE));
-        addComponent(new ClickableComponent(this::onClick));
-        addComponent(new RenderComponent(model));
+        createModel(loader);
     }
 
-    private TexturedModel createModel(Loader loader) {
+    private void createModel(Loader loader) {
         float[] vertices = {
                 0, 0, 0,
                 0, 0, 1,
@@ -57,7 +50,7 @@ public class Tile extends ComponentUser {
                 0, 1, 0,
         };
 
-        return new TexturedModel(
+        model = new TexturedModel(
                 loader.loadToVAO(
                         vertices, normals, textureCoords,  indices),
                 new ModelTexture( loader.loadTexture(tileType.getTextureName()))
@@ -75,4 +68,10 @@ public class Tile extends ComponentUser {
     public int getGridZ() { return gridZ; }
 
     public void setGridZ(int gridZ) { this.gridZ = gridZ; }
+
+    public Vector3f getWorldPos() {
+        return new Vector3f(this.gridX * TILE_SIZE + Terrain.getSize() * TILE_SIZE, 0, this.gridZ * TILE_SIZE + Terrain.getSize() * TILE_SIZE);
+    }
+
+    public TexturedModel getModel() { return model; }
 }

@@ -31,8 +31,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class DisplayManager {
     private static long window;
-    private static final int WIDTH = 1280;
-    private static final int HEIGHT = 720;
+    private static int WIDTH = 1280;
+    private static int HEIGHT = 720;
 
     private static float lastFrameTime;
     private static float delta;
@@ -144,6 +144,12 @@ public class DisplayManager {
         });
         glfwSetScrollCallback(window, (windowH, x, y) -> {
             MouseHandler.scroll = (float) y;
+        });
+        glfwSetWindowSizeCallback(window, (windowH, width, height) -> {
+            WIDTH = width;
+            HEIGHT = height;
+
+            System.out.println("Window Size: " + WIDTH + " x " + HEIGHT);
         });
 
         try ( MemoryStack stack = stackPush() ) {

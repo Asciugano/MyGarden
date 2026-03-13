@@ -1,6 +1,8 @@
 package com.asciugano.engine.renderer;
 
+import com.asciugano.engine.components.EntityTransform;
 import com.asciugano.engine.entities.Entity;
+import com.asciugano.engine.entities.MeshComponent;
 import com.asciugano.engine.models.RawModel;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.shaders.StaticShader;
@@ -15,6 +17,7 @@ import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL15.glGetBufferParameteri;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -36,7 +39,8 @@ public class EntityRenderer {
             List<Entity> batch = entities.get(model);
 
             for(Entity entity : batch) {
-                if(entity.getComponent(RenderComponent.class) == null) continue;
+                MeshComponent meshComponent = new MeshComponent();
+                if(!entity.hasComponent(meshComponent.type)) continue;
                 prepareInstance(entity);
 
                 glDrawElements(
@@ -86,20 +90,22 @@ public class EntityRenderer {
     }
 
     private void prepareInstance(Entity entity) {
-        if(entity.getComponent(TransformationComponent.class) != null) {
+        EntityTransform entityTransform = new EntityTransform();
+        if(entity.hasComponent(entityTransform.type)) {
+            EntityTransform entityTrasf = (EntityTransform) entity.getComponent(entityTransform.type);
             Matrix4f transformationMatrix = Maths.createTransformationMatrix(
-                    entity.getComponent(TransformationComponent.class).getPosition(),
-                    entity.getComponent(TransformationComponent.class).getRotation(),
-                    entity.getComponent(TransformationComponent.class).getScale()
+                    entityTransform.getPosition(),
+                    entityTransform.getRotation(),
+                    entityTransform.getScale()
             );
 
             shader.loadTransformationMatrix(transformationMatrix);
         }
 
-        if(entity.getComponent(OffsetComponent.class) != null) {
-            shader.loadOffset(
-                    entity.getComponent(OffsetComponent.class).getOffset()
-            );
-        }
+//        if(entity.getComponent(OffsetComponent.class) != null) {
+//            shader.loadOffset(
+//                    entity.getComponent(OffsetComponent.class).getOffset()
+//            );
+//        }
     }
 }

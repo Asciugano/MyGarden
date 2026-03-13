@@ -1,11 +1,13 @@
 package com.asciugano.engine.renderer;
 
+import com.asciugano.engine.components.EntityTransform;
 import com.asciugano.engine.models.RawModel;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.shaders.TileShader;
 import com.asciugano.engine.utils.Maths;
 import com.asciugano.game.entity.tiles.Tile;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Map;
@@ -64,16 +66,13 @@ public class TileRenderer {
     }
 
     private void prepareInstance(Tile tile) {
-        TransformationComponent tc = tile.getComponent(TransformationComponent.class);
-        if(tc != null) {
             shader.loadTransformationMatrix(
                     Maths.createTransformationMatrix(
-                            tc.getPosition(),
-                            tc.getRotation(),
-                            tc.getScale()
+                            tile.getWorldPos(),
+                            new Vector3f(0, 0, 0),
+                            1
                     )
             );
-        }
     }
 
     public void clenUp() {

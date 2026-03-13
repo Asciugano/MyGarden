@@ -53,6 +53,7 @@ public class Scene {
         );
         uiRenderer = new UIRenderer(loader);
         uis.add(tileSelector);
+//        SceneLayout.addEntitiesToScene(this);
     }
 
     public Scene(Loader loader, Light light, Camera camera, List<Terrain> terrains, List<Entity> entities) {
@@ -75,6 +76,7 @@ public class Scene {
         );
         uiRenderer = new UIRenderer(loader);
         uis.add(tileSelector);
+        SceneLayout.addEntitiesToScene(this);
     }
 
     public void addEntity(Entity entity) {

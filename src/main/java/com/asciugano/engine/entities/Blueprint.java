@@ -24,7 +24,7 @@ public class Blueprint {
     public Blueprint(String id, boolean savingEnabled, ComponentBlueprint... compBlueprints) {
         this.id = id;
         this.savingEnabled = savingEnabled;
-        this.componentTypes = initComponentMap(compBlueprints);
+        this.components = initComponentMap(compBlueprints);
     }
 
     public ComponentBlueprint getComponent(ComponentType type) { return components.get(type); }
@@ -43,7 +43,7 @@ public class Blueprint {
     private ComponentBundle createEntityComponents(Entity entity, ComponentParams... params) {
         ComponentBundle bundle = new ComponentBundle(params);
         for(ComponentBlueprint component : components.values()) {
-            bundle.addComponent(bundle.getComponents());
+            bundle.addComponents(bundle.getComponents());
         }
         return bundle;
     }
@@ -51,7 +51,9 @@ public class Blueprint {
     private static Map<ComponentType, ComponentBlueprint> initComponentMap(ComponentBlueprint[] components) {
         Map<ComponentType, ComponentBlueprint> componentMap = new LinkedHashMap<>();
         for(ComponentBlueprint component : components) {
-
+            componentMap.put(component.type, component);
         }
+
+        return componentMap;
     }
 }

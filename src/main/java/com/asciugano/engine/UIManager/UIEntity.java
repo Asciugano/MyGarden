@@ -4,7 +4,7 @@ import com.asciugano.engine.utils.Color;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-public abstract class UIEntity extends ComponentUser {
+public abstract class UIEntity {
     protected Vector3f color;
     protected UITexture ui;
     protected Vector2f scale;
@@ -15,16 +15,12 @@ public abstract class UIEntity extends ComponentUser {
         this.color = Color.WHITE;
         this.scale = scale;
         this.position = position;
-
-        addComponent(new UIComponent(ui, color));
     }
     public UIEntity(UITexture ui, Vector3f color, Vector2f scale) {
         this.ui = ui;
         this.color = color;
         this.scale = scale;
         position = new Vector2f(0, 0);
-
-        addComponent(new UIComponent(ui, color));
     }
 
     public void update(float dt) { }

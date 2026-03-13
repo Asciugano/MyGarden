@@ -4,11 +4,13 @@ import com.asciugano.engine.display.DisplayManager;
 import com.asciugano.engine.entities.Camera;
 import com.asciugano.engine.entities.Entity;
 import com.asciugano.engine.entities.Light;
+import com.asciugano.engine.entities.MeshComponent;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.shaders.StaticShader;
 import com.asciugano.engine.shaders.TerrainShader;
 import com.asciugano.engine.shaders.TileShader;
 import com.asciugano.engine.terrains.Terrain;
+import com.asciugano.game.GameManager;
 import com.asciugano.game.entity.tiles.Tile;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -94,10 +96,7 @@ public class MasterRenderer {
     public void processTerrain(Terrain terrain) {
         for(Tile[] tilesA : terrain.getTiles()) {
             for(Tile tile : tilesA) {
-                RenderComponent rc = tile.getComponent(RenderComponent.class);
-                if(rc == null) continue;
-
-                TexturedModel model = rc.getModel();
+                TexturedModel model = tile.getModel();
                 List<Tile> batch = tiles.get(model);
                 if(batch != null) {
                     batch.add(tile);
@@ -110,8 +109,10 @@ public class MasterRenderer {
         }
     }
     public void processEntity(Entity entity) {
-        if(entity.getComponent(RenderComponent.class) != null) {
-            TexturedModel entityModel = entity.getComponent(RenderComponent.class).getModel();
+        MeshComponent meshComponent = new MeshComponent();
+        if(entity.hasComponent(meshComponent.type)) {
+            MeshComponent entityMC = ((MeshComponent) entity.getComponent(meshComponent.type));
+            TexturedModel entityModel = entityMC.getModel();
             List<Entity> batch = entities.get(entityModel);
             if (batch != null) {
                 batch.add(entity);
