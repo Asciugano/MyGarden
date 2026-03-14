@@ -3,6 +3,10 @@ package com.asciugano.engine.utils;
 import org.joml.Vector3f;
 
 public class Color {
+    public final Vector3f color;
+    public Color(Vector3f color) {
+        this.color = color;
+    }
 
     public static Vector3f fromFloat(float red, float green, float blue) {
         return new Vector3f(clamp(red), clamp(green), clamp(blue));

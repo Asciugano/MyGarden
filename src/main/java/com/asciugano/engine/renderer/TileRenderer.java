@@ -1,6 +1,7 @@
 package com.asciugano.engine.renderer;
 
 import com.asciugano.engine.components.EntityTransform;
+import com.asciugano.engine.models.ColoredModel;
 import com.asciugano.engine.models.RawModel;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.shaders.TileShader;
@@ -29,37 +30,32 @@ public class TileRenderer {
         shader.stop();
     }
 
-    public void render(Map<TexturedModel, List<Tile>> tiles) {
-        for(TexturedModel model : tiles.keySet()) {
+    public void render(Map<ColoredModel, List<Tile>> tiles) {
+        for(ColoredModel model : tiles.keySet()) {
             prepareTexturedModel(model);
             List<Tile> batch = tiles.get(model);
 
             for(Tile tile : batch) {
                 prepareInstance(tile);
 
+                shader.loadColor(model.getColor());
+
                 glDrawElements(GL_TRIANGLES, model.getRawModel().getVertexCount(), GL_UNSIGNED_INT, 0);
             }
 
-            unbindTexturedModel();
+            unbindModel();
         }
     }
 
-    private void prepareTexturedModel(TexturedModel texturedModel) {
-        RawModel rawModel = texturedModel.getRawModel();
+    private void prepareTexturedModel(ColoredModel coloredModel) {
+        RawModel rawModel = coloredModel.getRawModel();
         glBindVertexArray(rawModel.getVaoID());
         glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-
-        shader.connectTextureUnits();
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texturedModel.getTexture().getTextureID());
     }
 
-    private void unbindTexturedModel() {
+    private void unbindModel() {
         MasterRenderer.enableCulling();
         glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
         glBindVertexArray(0);
     }
 
@@ -67,7 +63,7 @@ public class TileRenderer {
             shader.loadTransformationMatrix(
                     Maths.createTransformationMatrix(
                             tile.getWorldPos(),
-                            new Vector3f(0, 0, 0),
+                            Maths.ZERO_ROT,
                             Tile.getTileSize()
                     )
             );

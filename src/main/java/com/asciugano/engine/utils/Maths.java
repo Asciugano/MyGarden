@@ -50,4 +50,8 @@ public class Maths {
                 .translate(translation.x, translation.y, 0)
                 .scale(new Vector3f(scale.x, scale.y, 1));
     }
+
+    public static final Vector3f ZERO_ROT = new Vector3f(0, 0, 0);
+
+    public static final Vector3f UP = new Vector3f(0, 1, 0);
 }

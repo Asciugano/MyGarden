@@ -5,12 +5,13 @@ import com.asciugano.engine.entities.Camera;
 import com.asciugano.engine.entities.Entity;
 import com.asciugano.engine.entities.Light;
 import com.asciugano.engine.entities.MeshComponent;
+import com.asciugano.engine.models.ColoredModel;
 import com.asciugano.engine.models.TexturedModel;
 import com.asciugano.engine.shaders.StaticShader;
 import com.asciugano.engine.shaders.TerrainShader;
 import com.asciugano.engine.shaders.TileShader;
 import com.asciugano.engine.terrains.Terrain;
-import com.asciugano.game.GameManager;
+import com.asciugano.game.entity.tiles.TerrainTile;
 import com.asciugano.game.entity.tiles.Tile;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -44,7 +45,7 @@ public class MasterRenderer {
     private TileRenderer tileRenderer;
 
     private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
-    private Map<TexturedModel, List<Tile>> tiles = new HashMap<>();
+    private Map<ColoredModel, List<Tile>> tiles = new HashMap<>();
 //    private SkyBoxRenderer skyBoxRenderer;
 
     public MasterRenderer(Loader loader) {
@@ -94,9 +95,9 @@ public class MasterRenderer {
     }
 
     public void processTerrain(Terrain terrain) {
-        for(Tile[] tilesA : terrain.getTiles()) {
-            for(Tile tile : tilesA) {
-                TexturedModel model = tile.getModel();
+        for(TerrainTile[] tilesA : terrain.getTiles()) {
+            for(TerrainTile tile : tilesA) {
+                ColoredModel model = tile.getModel();
                 List<Tile> batch = tiles.get(model);
                 if(batch != null) {
                     batch.add(tile);

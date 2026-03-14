@@ -13,6 +13,7 @@ import com.asciugano.engine.renderer.MasterRenderer;
 import com.asciugano.engine.terrains.Terrain;
 import com.asciugano.engine.utils.Color;
 import com.asciugano.game.UI.TileSelector;
+import com.asciugano.game.entity.tiles.Tile;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
