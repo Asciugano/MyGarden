@@ -13,7 +13,6 @@ import com.asciugano.engine.renderer.MasterRenderer;
 import com.asciugano.engine.terrains.Terrain;
 import com.asciugano.engine.utils.Color;
 import com.asciugano.game.UI.TileSelector;
-import com.asciugano.game.entity.tiles.Tile;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -21,116 +20,121 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Scene {
-    private Light light;
-    private Camera camera;
-    private List<Terrain> terrains = new ArrayList<>();
-    private List<Entity> entities = new ArrayList<>();
+  private Light light;
+  private Camera camera;
+  private List<Terrain> terrains = new ArrayList<>();
+  private List<Entity> entities = new ArrayList<>();
 
-    private MasterRenderer masterRenderer;
-    private UIRenderer uiRenderer;
-    private List<UIEntity> uis = new ArrayList<>();
-    private MousePicker mousePicker;
-    private TileSelector tileSelector;
+  private MasterRenderer masterRenderer;
+  private UIRenderer uiRenderer;
+  private List<UIEntity> uis = new ArrayList<>();
+  private MousePicker mousePicker;
+  private TileSelector tileSelector;
 
-    public EntityManager entityManager = new EntityManager();
+  public EntityManager entityManager = new EntityManager();
 
-    public Scene(Loader loader) {
-        terrains.add(new Terrain(loader));
-        camera = new Camera();
-        camera.setTarget(Terrain.getTileFromWorld(0, 0));
-        System.out.println("camera pos: " + camera.getPosition());
-        light = new Light(new Vector3f(0, 100, 100), new Vector3f(1, 1, 1));
+  public Scene(Loader loader) {
+    terrains.add(new Terrain(loader));
+    camera = new Camera();
+    camera.setTarget(Terrain.getTileFromWorld(0, 0));
+    System.out.println("camera pos: " + camera.getPosition());
+    light = new Light(new Vector3f(0, 100, 100), new Vector3f(1, 1, 1));
 
-        this.masterRenderer = new MasterRenderer(loader);
-        // TODO: fixare in futuro per quando si avranno piu terrains
-        mousePicker = new MousePicker(camera, masterRenderer.getProjectionMatrix(), terrains.get(0));
+    this.masterRenderer = new MasterRenderer(loader);
+    // TODO: fixare in futuro per quando si avranno piu terrains
+    mousePicker = new MousePicker(camera, masterRenderer.getProjectionMatrix(), terrains.get(0));
 
-        tileSelector = new TileSelector(
-                new UITexture(
-                        loader.loadTexture("UITextures/selector.png"),
-                        new Vector2f(0, 0),
-                        new Vector2f(0.1f, 0.1f)
-                ),
-                Color.WHITE
-        );
-        uiRenderer = new UIRenderer(loader);
-        uis.add(tileSelector);
-//        SceneLayout.addEntitiesToScene(this);
+    // tileSelector = new TileSelector(
+    // new UITexture(
+    // loader.loadTexture("UITextures/selector.png"),
+    // new Vector2f(0, 0),
+    // new Vector2f(0.1f, 0.1f)),
+    // Color.WHITE);
+    // uiRenderer = new UIRenderer(loader);
+    // uis.add(tileSelector);
+    // SceneLayout.addEntitiesToScene(this);
+  }
+
+  public Scene(Loader loader, Light light, Camera camera, List<Terrain> terrains, List<Entity> entities) {
+    this.light = light;
+    this.camera = camera;
+    this.terrains = terrains;
+    this.entities = entities;
+
+    this.masterRenderer = new MasterRenderer(loader);
+    // TODO: fixare in futuro per qundo si avranno piu terrains
+    mousePicker = new MousePicker(camera, masterRenderer.getProjectionMatrix(), terrains.get(0));
+
+    // tileSelector = new TileSelector(
+    // new UITexture(
+    // loader.loadTexture("UITextures/selector.png"),
+    // new Vector2f(0, 0),
+    // new Vector2f(0.1f, 0.1f)),
+    // Color.WHITE);
+    // uiRenderer = new UIRenderer(loader);
+    // uis.add(tileSelector);
+    SceneLayout.addEntitiesToScene(this);
+  }
+
+  public void addEntity(Entity entity) {
+    this.entities.add(entity);
+  }
+
+  public void addTerrain(Terrain terrain) {
+    this.terrains.add(terrain);
+  }
+
+  public void update(float dt) {
+    mousePicker.update();
+    camera.move();
+    for (UIEntity uiEntity : uis) {
+      if (uiEntity == tileSelector)
+        tileSelector.update(dt, mousePicker.getCurrentTile());
+      uiEntity.update(dt);
     }
 
-    public Scene(Loader loader, Light light, Camera camera, List<Terrain> terrains, List<Entity> entities) {
-        this.light = light;
-        this.camera = camera;
-        this.terrains = terrains;
-        this.entities = entities;
+    for (Entity entity : entities) {
+      entity.update();
+    }
+  }
 
-        this.masterRenderer = new MasterRenderer(loader);
-        // TODO: fixare in futuro per qundo si avranno piu terrains
-        mousePicker = new MousePicker(camera, masterRenderer.getProjectionMatrix(), terrains.get(0));
+  public Terrain getTerrain(Terrain terrain) {
+    return terrains.get(terrains.indexOf(terrain));
+  }
 
-        tileSelector = new TileSelector(
-                new UITexture(
-                        loader.loadTexture("UITextures/selector.png"),
-                        new Vector2f(0, 0),
-                        new Vector2f(0.1f, 0.1f)
-                ),
-                Color.WHITE
-        );
-        uiRenderer = new UIRenderer(loader);
-        uis.add(tileSelector);
-        SceneLayout.addEntitiesToScene(this);
+  public Entity getEntity(Entity entity) {
+    return entities.get(entities.indexOf(entity));
+  }
+
+  public void render() {
+    for (Terrain terrain : terrains) {
+      masterRenderer.processTerrain(terrain);
+    }
+    for (Entity entity : entities) {
+      masterRenderer.processEntity(entity);
     }
 
-    public void addEntity(Entity entity) {
-        this.entities.add(entity);
-    }
+    masterRenderer.render(light, camera);
+    // uiRenderer.render(uis);
+  }
 
-    public void addTerrain(Terrain terrain) {
-        this.terrains.add(terrain);
-    }
+  public Light getLight() {
+    return light;
+  }
 
-    public void update(float dt) {
-        mousePicker.update();
-        camera.move();
-        for(UIEntity uiEntity : uis) {
-            if(uiEntity == tileSelector)
-                tileSelector.update(dt, mousePicker.getCurrentTile());
-            uiEntity.update(dt);
-        }
+  public Camera getCamera() {
+    return camera;
+  }
 
-        for(Entity entity : entities) {
-            entity.update();
-        }
-    }
-    public Terrain getTerrain(Terrain terrain) {
-        return terrains.get(terrains.indexOf(terrain));
-    }
+  public List<Terrain> getTerrains() {
+    return terrains;
+  }
 
-    public Entity getEntity(Entity entity) {
-        return entities.get(entities.indexOf(entity));
-    }
+  public List<Entity> getEntities() {
+    return entities;
+  }
 
-    public void render() {
-        for(Terrain terrain : terrains) {
-            masterRenderer.processTerrain(terrain);
-        }
-        for(Entity entity : entities) {
-            masterRenderer.processEntity(entity);
-        }
-
-        masterRenderer.render(light, camera);
-        uiRenderer.render(uis);
-    }
-
-    public Light getLight() { return light; }
-
-    public Camera getCamera() { return camera; }
-
-    public List<Terrain> getTerrains() { return terrains; }
-
-    public List<Entity> getEntities() { return entities; }
-
-    public void cleanUp() {
-        masterRenderer.cleanUp();
-    }
+  public void cleanUp() {
+    masterRenderer.cleanUp();
+  }
 }
