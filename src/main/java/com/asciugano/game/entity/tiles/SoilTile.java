@@ -1,17 +1,19 @@
 package com.asciugano.game.entity.tiles;
 
+import org.joml.Vector3f;
+
 import com.asciugano.engine.models.MeshBuilder;
 import com.asciugano.engine.models.QuadBuilder;
 import com.asciugano.engine.renderer.Loader;
 import com.asciugano.engine.utils.Color;
 import com.asciugano.engine.utils.Maths;
-import org.joml.Vector3f;
 
-public class GrassTile extends TerrainTile {
-  private static final Color COLOR = new Color(new Vector3f(0.2f, 0.7f, 0.2f));
-  private static final float HEIGHT = 0.3f;
+public class SoilTile extends TerrainTile {
 
-  public GrassTile(Tile tile, Loader loader) {
+  private static final Color COLOR = new Color(new Vector3f(0.4f, 0.25f, 0.1f));
+  private static final float HEIGHT = -0.2f;
+
+  public SoilTile(Tile tile, Loader loader) {
     super(tile, loader);
   }
 
