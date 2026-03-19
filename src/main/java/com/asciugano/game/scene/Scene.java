@@ -7,10 +7,17 @@ import com.asciugano.engine.entities.Entity;
 import com.asciugano.engine.entities.EntityManager;
 import com.asciugano.engine.entities.Light;
 import com.asciugano.engine.handlers.mouse.MousePicker;
+import com.asciugano.engine.memory.MemoryMapper;
+import com.asciugano.engine.memory.VBOMemoryUpdater;
+import com.asciugano.engine.models.MeshBuilder;
+import com.asciugano.engine.models.MeshData;
 import com.asciugano.engine.renderer.Loader;
 import com.asciugano.engine.renderer.MasterRenderer;
 import com.asciugano.engine.terrains.Terrain;
 import com.asciugano.game.UI.TileSelector;
+import com.asciugano.game.entity.tiles.chunks.Chunk;
+import com.asciugano.game.entity.tiles.chunks.ChunkManager;
+
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -29,13 +36,18 @@ public class Scene {
   private MousePicker mousePicker;
   private TileSelector tileSelector;
 
-  public EntityManager entityManager = new EntityManager();
+  private EntityManager entityManager = new EntityManager();
+  private MeshData chunksMeshData;
+  private VBOMemoryUpdater<Chunk> chunkUpdater;
+  private ChunkManager chunkManager;
 
   public Scene(Loader loader) {
-    terrains.add(new Terrain(loader));
+    // terrains.add(new Terrain(loader));
     camera = new Camera();
     camera.setTarget(Terrain.getTileFromWorld(0, 0));
     light = new Light(new Vector3f(0, 10, 0), new Vector3f(1, 1, 1));
+
+    initChunks(loader);
 
     this.masterRenderer = new MasterRenderer(loader);
     // TODO: fixare in futuro per quando si avranno piu terrains
@@ -50,6 +62,18 @@ public class Scene {
     // uiRenderer = new UIRenderer(loader);
     // uis.add(tileSelector);
     // SceneLayout.addEntitiesToScene(this);
+  }
+
+  private void initChunks(Loader loader) {
+    chunksMeshData = new MeshData(1024 * 1024);
+    MemoryMapper<Chunk> chunkMapper = new MemoryMapper<>();
+    chunkUpdater = new VBOMemoryUpdater<>(chunksMeshData, chunkMapper);
+    chunkManager = new ChunkManager(chunkUpdater, loader);
+
+    chunkManager.loadChunk(0, 0);
+    chunkManager.loadChunk(1, 0);
+    chunkManager.loadChunk(0, 1);
+    chunkManager.loadChunk(1, 1);
   }
 
   public Scene(Loader loader, Light light, Camera camera, List<Terrain> terrains, List<Entity> entities) {

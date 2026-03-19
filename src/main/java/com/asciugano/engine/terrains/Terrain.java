@@ -1,6 +1,5 @@
 package com.asciugano.engine.terrains;
 
-import com.asciugano.engine.models.MeshBuilder;
 import com.asciugano.engine.renderer.Loader;
 import com.asciugano.engine.utils.Direction;
 import com.asciugano.game.entity.tiles.*;

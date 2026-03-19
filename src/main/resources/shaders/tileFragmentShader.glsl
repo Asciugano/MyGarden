@@ -11,7 +11,7 @@ uniform vec3 lightColor;
 void main() {
     vec3 N = normalize(surfaceNormal);
 
-    vec3 L = normalize(vec3(-1.0, 1.0, 1.0));
+    vec3 L = normalize(vec3(-1.0, 1.0, -1.0));
 
     vec3 V = normalize(toCameraVector);
 
