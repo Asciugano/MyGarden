@@ -12,7 +12,7 @@ import com.asciugano.game.entity.tiles.TerrainTile;
 
 public class ChunkMeshBuilder {
 
-  public static byte[] build(Chunk chunk) {
+  public static ByteBuffer build(Chunk chunk) {
     List<Float> vertices = new ArrayList<>();
 
     TerrainTile[][] tiles = chunk.getTiles();
@@ -21,15 +21,15 @@ public class ChunkMeshBuilder {
     for (int x = 0; x < size; x++) {
       for (int z = 0; z < size; z++) {
         TerrainTile tile = tiles[x][z];
-        addTileQuad(vertices, tile);
+        addTileQuad(vertices, tile, chunk);
       }
     }
 
-    return toByteArray(vertices);
+    return toByteBuffer(vertices);
   }
 
-  private static void addTileQuad(List<Float> vertices, TerrainTile tile) {
-    Vector3f position = Terrain.getPositionFromGrid(tile.getGridX(), tile.getGridZ());
+  private static void addTileQuad(List<Float> vertices, TerrainTile tile, Chunk chunk) {
+    Vector3f position = Terrain.getPositionFromGrid(tile.getGridX(), tile.getGridZ(), chunk.getX(), chunk.getZ());
     position.y = tile.getEdgeHeight();
 
     vertices.add(position.x);
@@ -53,10 +53,11 @@ public class ChunkMeshBuilder {
     vertices.add(position.z + 1);
   }
 
-  private static byte[] toByteArray(List<Float> data) {
+  private static ByteBuffer toByteBuffer(List<Float> data) {
     ByteBuffer buffer = BufferUtils.createByteBuffer(data.size() * Float.BYTES);
     for (float f : data)
       buffer.putFloat(f);
-    return buffer.flip().array();
+
+    return buffer.flip();
   }
 }

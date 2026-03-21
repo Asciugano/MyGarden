@@ -26,29 +26,25 @@ public class MeshDataVBO {
     glBufferData(GL_ARRAY_BUFFER, capacity, GL_DYNAMIC_DRAW);
   }
 
+  /**
+   * Aggiorna i dati nel VBO a partire da offset.
+   */
   public void updateData(long offset, ByteBuffer data) {
     glBindBuffer(GL_ARRAY_BUFFER, vboID);
     glBufferSubData(GL_ARRAY_BUFFER, offset, data);
   }
 
+  /**
+   * Ridimensiona il VBO creando un nuovo buffer e copiando i dati esistenti
+   * manualmente.
+   */
   public void resize(int currentSize, long newCapacity) {
-    int newVbo = glGenBuffers();
-
-    glBindBuffer(GL_COPY_READ_BUFFER, vboID);
-
-    glBindBuffer(GL_COPY_WRITE_BUFFER, newVbo);
-    glBufferData(GL_COPY_WRITE_BUFFER, newCapacity, GL_DYNAMIC_DRAW);
-
-    glCopyBufferSubData(
-        GL_COPY_READ_BUFFER,
-        GL_COPY_WRITE_BUFFER,
-        0,
-        0,
-        currentSize);
+    int newVboID = glGenBuffers();
+    glBindBuffer(GL_ARRAY_BUFFER, newVboID);
+    glBufferData(GL_ARRAY_BUFFER, newCapacity, GL_DYNAMIC_DRAW);
 
     glDeleteBuffers(vboID);
-
-    vboID = newVbo;
+    vboID = newVboID;
     capacity = newCapacity;
   }
 

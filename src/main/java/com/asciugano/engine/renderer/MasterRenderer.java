@@ -46,7 +46,7 @@ public class MasterRenderer {
   private EntityRenderer entityRenderer;
 
   private TileRenderer tileRenderer;
-  private ChunkRenderer chunkRenderer;
+  private ChunkRenderer chunkRenderer = new ChunkRenderer();
 
   private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
   // private Map<ColoredModel, List<TerrainTile>> tiles = new HashMap<>();

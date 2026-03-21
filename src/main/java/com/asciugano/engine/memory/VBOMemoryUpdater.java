@@ -17,8 +17,8 @@ public class VBOMemoryUpdater<T> {
     this.memoryMapper = memoryMapper;
   }
 
-  public void store(T objectKey, byte[] vertexData) {
-    resizeIfNecessary(vertexData.length);
+  public void store(T objectKey, ByteBuffer vertexData) {
+    resizeIfNecessary(vertexData.capacity());
     MemorySlot slot = memoryMapper.store(objectKey, vertexData);
     storeDataInVBO(slot, vertexData);
     updateMeshVertexCount();
@@ -41,8 +41,8 @@ public class VBOMemoryUpdater<T> {
       meshData.getMeshDataVBO().resize(currentSize, (long) (vboCapacity * RESIZE_FACTOR));
   }
 
-  private void storeDataInVBO(MemorySlot slot, byte[] data) {
-    ByteBuffer buffer = storeDataInBuffer(data);
+  private void storeDataInVBO(MemorySlot slot, ByteBuffer data) {
+    buffer = storeDataInBuffer(data);
     storeBufferInVBO(buffer, slot.getStartIndex());
   }
 
@@ -51,9 +51,9 @@ public class VBOMemoryUpdater<T> {
     storeBufferInVBO(buffer, slot.getStartIndex());
   }
 
-  private ByteBuffer storeDataInBuffer(byte[] data) {
+  private ByteBuffer storeDataInBuffer(ByteBuffer data) {
     buffer.clear();
-    buffer.put(data);
+    buffer = data;
     buffer.flip();
     return buffer;
   }

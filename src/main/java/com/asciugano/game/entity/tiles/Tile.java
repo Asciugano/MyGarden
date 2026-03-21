@@ -28,7 +28,7 @@ public class Tile {
   }
 
   public Vector3f getWorldPos() {
-    float offset = Terrain.offset(gridX, gridZ);
+    float offset = Terrain.offset();
     return new Vector3f(gridX * TILE_SIZE - offset, 0, gridZ * TILE_SIZE - offset);
   }
 

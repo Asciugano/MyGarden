@@ -1,6 +1,7 @@
 package com.asciugano.engine.memory;
 
 import java.util.List;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +14,8 @@ public class MemoryMapper<T> {
   private final List<Integer> freed = new ArrayList<>(0);
   private int currenByteSize = 0;
 
-  public MemorySlot store(T key, byte[] data) {
-    int size = data.length;
+  public MemorySlot store(T key, ByteBuffer data) {
+    int size = data.capacity();
 
     MemorySlot slot = new MemorySlot(currenByteSize, size);
     map.put(key, slot);

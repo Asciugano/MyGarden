@@ -55,14 +55,16 @@ public class Terrain {
     int localX = tileX % Chunk.getSize();
     int localZ = tileZ % Chunk.getSize();
 
-    return getChunk(chunkX, chunkZ).getTile(tileX, tileZ);
+    return getChunk(chunkX, chunkZ).getTile(localX, localZ);
   }
 
-  public Vector3f getPositionFromGrid(int chunkX, int chunkZ, int tileX, int tileZ) {
+  public static Vector3f getPositionFromGrid(int tileX, int tileZ, int chunkX, int chunkZ) {
     float worldX = (chunkX * Chunk.getSize() + tileX) * Tile.getTileSize();
     float worldZ = (chunkZ * Chunk.getSize() + tileZ) * Tile.getTileSize();
 
     Chunk chunk = getChunk(chunkX, chunkZ);
+    if (chunk == null)
+      return new Vector3f(0, 0, 0);
 
     return new Vector3f(
         worldX - offset(),
@@ -81,7 +83,7 @@ public class Terrain {
       case WEST -> x -= 1;
     }
 
-    if (x >= 0 || x < Chunk.getSize() || z >= 0 || z < Chunk.getSize())
+    if (x >= 0 && x < Chunk.getSize() && z >= 0 && z < Chunk.getSize())
       return chunk.getTile(x, z);
 
     int chunkX = chunk.getX();
@@ -106,10 +108,14 @@ public class Terrain {
 
     Chunk neighbourChunk = getChunk(chunkX, chunkZ);
 
+    // TODO: sistemare questo return
+    if (neighbourChunk == null)
+      return null;
+
     return neighbourChunk.getTile(x, z);
   }
 
-  private float offset() {
+  public static float offset() {
     return (SIZE * Chunk.getSize() * Tile.getTileSize()) / 2f;
   }
 

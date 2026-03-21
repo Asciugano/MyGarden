@@ -22,7 +22,7 @@ public class Chunk {
     return SIZE;
   }
 
-  private TerrainTile tiles[][];
+  private TerrainTile tiles[][] = new TerrainTile[SIZE][SIZE];
   private MeshData meshData;
 
   private int x, z;
@@ -56,19 +56,11 @@ public class Chunk {
       }
     }
 
-    byte[] mesh = ChunkMeshBuilder.build(this);
-    meshData = new MeshData(mesh.length);
+    ByteBuffer mesh = ChunkMeshBuilder.build(this);
+    meshData = new MeshData(mesh.capacity());
 
-    meshData.getMeshDataVBO().updateData(0, toBuffer(mesh));
-    meshData.setVertexCount(mesh.length / MeshData.BYTES_PER_VERTEX);
-  }
-
-  private ByteBuffer toBuffer(byte[] data) {
-    ByteBuffer buffer = BufferUtils.createByteBuffer(data.length);
-    buffer.put(data);
-    buffer.flip();
-
-    return buffer;
+    meshData.getMeshDataVBO().updateData(0, mesh);
+    meshData.setVertexCount(mesh.capacity() / MeshData.BYTES_PER_VERTEX);
   }
 
   public TerrainTile getTile(int x, int z) {

@@ -1,5 +1,6 @@
 package com.asciugano.game.entity.tiles.chunks;
 
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,11 +20,11 @@ public class ChunkManager {
 
   public void loadChunk(int x, int z) {
     Chunk chunk = new Chunk(x, z);
+    chunks.put(key(x, z), chunk);
     chunk.generateTiles(loader);
 
-    byte[] mesh = ChunkMeshBuilder.build(chunk);
+    ByteBuffer mesh = ChunkMeshBuilder.build(chunk);
     updater.store(chunk, mesh);
-    chunks.put(key(x, z), chunk);
   }
 
   public void unloadChunk(int x, int z) {
