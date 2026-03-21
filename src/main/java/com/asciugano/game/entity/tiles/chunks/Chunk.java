@@ -3,9 +3,8 @@ package com.asciugano.game.entity.tiles.chunks;
 import java.nio.ByteBuffer;
 import java.util.Random;
 
-import org.lwjgl.BufferUtils;
-
 import com.asciugano.engine.models.MeshData;
+import com.asciugano.engine.models.RawModel;
 import com.asciugano.engine.renderer.Loader;
 import com.asciugano.game.entity.tiles.DirtTile;
 import com.asciugano.game.entity.tiles.GrassTile;
@@ -24,6 +23,7 @@ public class Chunk {
 
   private TerrainTile tiles[][] = new TerrainTile[SIZE][SIZE];
   private MeshData meshData;
+  private RawModel model;
 
   private int x, z;
 
@@ -61,6 +61,42 @@ public class Chunk {
 
     meshData.getMeshDataVBO().updateData(0, mesh);
     meshData.setVertexCount(mesh.capacity() / MeshData.BYTES_PER_VERTEX);
+
+    genModel(loader, mesh);
+  }
+
+  private void genModel(Loader loader, ByteBuffer mesh) {
+
+    int floatCount = mesh.capacity() / Float.BYTES;
+    float[] vertexData = new float[floatCount];
+    mesh.asFloatBuffer().get(vertexData);
+
+    float[] positions = new float[(vertexData.length / meshData.BYTES_PER_VERTEX) * 3];
+    float[] colors = new float[(vertexData.length / meshData.BYTES_PER_VERTEX) * 3];
+    float[] normals = new float[(vertexData.length / meshData.BYTES_PER_VERTEX) * 3];
+    int vertexNum = vertexData.length / (MeshData.BYTES_PER_VERTEX / Float.BYTES);
+
+    for (int i = 0; i < vertexNum; i++) {
+      int base = i * (MeshData.BYTES_PER_VERTEX / Float.BYTES);
+
+      positions[i * 3] = vertexData[base];
+      positions[i * 3 + 1] = vertexData[base + 1];
+      positions[i * 3 + 2] = vertexData[base + 2];
+
+      colors[i * 3] = vertexData[base + 3];
+      colors[i * 3 + 1] = vertexData[base + 4];
+      colors[i * 3 + 2] = vertexData[base + 5];
+
+      normals[i * 3] = vertexData[base + 6];
+      normals[i * 3 + 1] = vertexData[base + 7];
+      normals[i * 3 + 2] = vertexData[base + 8];
+    }
+
+    int[] indices = new int[vertexNum];
+    for (int i = 0; i < vertexNum; i++)
+      indices[i] = i;
+
+    this.model = loader.loadToVAO(positions, colors, 3, normals, indices);
   }
 
   public TerrainTile getTile(int x, int z) {
@@ -81,5 +117,9 @@ public class Chunk {
 
   public MeshData getMeshData() {
     return meshData;
+  }
+
+  public RawModel getModel() {
+    return model;
   }
 }

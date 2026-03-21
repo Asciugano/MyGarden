@@ -2,7 +2,6 @@ package com.asciugano.engine.shaders;
 
 import com.asciugano.engine.entities.Camera;
 import com.asciugano.engine.entities.Light;
-import com.asciugano.engine.utils.Color;
 import com.asciugano.engine.utils.Maths;
 import org.joml.Matrix4f;
 

@@ -24,6 +24,7 @@ import com.asciugano.engine.entities.Light;
 import com.asciugano.engine.entities.MeshComponent;
 import com.asciugano.engine.models.MeshData;
 import com.asciugano.engine.models.TexturedModel;
+import com.asciugano.engine.shaders.ChunkShader;
 import com.asciugano.engine.shaders.StaticShader;
 import com.asciugano.engine.shaders.TerrainShader;
 import com.asciugano.engine.shaders.TileShader;
@@ -46,7 +47,7 @@ public class MasterRenderer {
   private EntityRenderer entityRenderer;
 
   private TileRenderer tileRenderer;
-  private ChunkRenderer chunkRenderer = new ChunkRenderer();
+  private ChunkRenderer chunkRenderer;
 
   private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
   // private Map<ColoredModel, List<TerrainTile>> tiles = new HashMap<>();
@@ -57,6 +58,7 @@ public class MasterRenderer {
     createProjectionMatrix();
     entityRenderer = new EntityRenderer(shader, projectionMatrix);
     tileRenderer = new TileRenderer(tileShader, projectionMatrix);
+    chunkRenderer = new ChunkRenderer(tileShader, projectionMatrix);
     // skyBoxRenderer = new SkyBoxRenderer(loader, projectionMatrix);
   }
 
@@ -81,8 +83,14 @@ public class MasterRenderer {
     tileShader.stop();
   }
 
-  private void renderChunk() {
+  private void renderChunk(Light light, Camera camera) {
+    tileShader.start();
+    tileShader.loadViewMatrix(camera);
+    tileShader.loadLight(light);
+
     chunkRenderer.render(chunks);
+
+    tileShader.stop();
   }
 
   public void render(Light light, Camera camera) {
@@ -90,7 +98,7 @@ public class MasterRenderer {
 
     renderEntity(light, camera);
     // renderTile(light, camera);
-    renderChunk();
+    renderChunk(light, camera);
 
     // skyBoxRenderer.render(camera, new Vector3f(RED, GREEN, BLUE));
 
