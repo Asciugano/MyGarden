@@ -17,6 +17,7 @@ import com.asciugano.engine.renderer.MasterRenderer;
 import com.asciugano.engine.terrains.Terrain;
 import com.asciugano.engine.utils.Maths;
 import com.asciugano.game.UI.TileSelector;
+import com.asciugano.game.entity.tiles.chunks.Chunk;
 
 public class Scene {
   private Light light;
@@ -120,5 +121,8 @@ public class Scene {
 
   public void cleanUp() {
     masterRenderer.cleanUp();
+    for (Chunk chunk : new ArrayList<Chunk>(terrain.getManager().getChunks().values())) {
+      terrain.getManager().unloadChunk(chunk);
+    }
   }
 }

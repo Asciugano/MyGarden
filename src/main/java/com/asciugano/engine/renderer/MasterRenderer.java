@@ -50,7 +50,7 @@ public class MasterRenderer {
 
   private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
   // private Map<ColoredModel, List<TerrainTile>> tiles = new HashMap<>();
-  private List<Chunk> chunks = new ArrayList<>();
+  private List<MeshData> terrainMeshDatas = new ArrayList<>();
   // private SkyBoxRenderer skyBoxRenderer;
 
   public MasterRenderer(Loader loader) {
@@ -87,7 +87,7 @@ public class MasterRenderer {
     tileShader.loadViewMatrix(camera);
     tileShader.loadLight(light);
 
-    chunkRenderer.render(chunks);
+    chunkRenderer.render(terrainMeshDatas);
 
     tileShader.stop();
   }
@@ -102,13 +102,14 @@ public class MasterRenderer {
     // skyBoxRenderer.render(camera, new Vector3f(RED, GREEN, BLUE));
 
     entities.clear();
+    terrainMeshDatas.clear();
     // tiles.clear();
-    chunks.clear();
   }
 
   public void processTerrain(Terrain terrain) {
+    terrainMeshDatas.clear();
     for (Chunk chunk : terrain.getManager().getChunks().values()) {
-      chunks.add(chunk);
+      terrainMeshDatas.add(chunk.getMeshData());
     }
     // for (TerrainTile[] tilesA : terrain.getTiles()) {
     // for (TerrainTile tile : tilesA) {

@@ -52,6 +52,7 @@ public class VBOMemoryUpdater<T> {
   }
 
   private ByteBuffer storeDataInBuffer(ByteBuffer data) {
+    data.rewind();
     if (buffer.capacity() < data.capacity())
       buffer = BufferUtils.createByteBuffer(data.capacity());
 
@@ -77,5 +78,9 @@ public class VBOMemoryUpdater<T> {
   private void updateMeshVertexCount() {
     int vertexCount = memoryMapper.getCurrentByteSize() / MeshData.BYTES_PER_VERTEX;
     meshData.setVertexCount(vertexCount);
+  }
+
+  public MeshData getMeshData() {
+    return meshData;
   }
 }

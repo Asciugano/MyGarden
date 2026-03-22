@@ -7,9 +7,6 @@ import static org.lwjgl.opengl.GL15.glBufferData;
 import static org.lwjgl.opengl.GL15.glBufferSubData;
 import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import static org.lwjgl.opengl.GL15.glGenBuffers;
-import static org.lwjgl.opengl.GL31.GL_COPY_READ_BUFFER;
-import static org.lwjgl.opengl.GL31.GL_COPY_WRITE_BUFFER;
-import static org.lwjgl.opengl.GL31.glCopyBufferSubData;
 
 import java.nio.ByteBuffer;
 

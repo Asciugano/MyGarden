@@ -21,10 +21,17 @@ public class ChunkManager {
   public void loadChunk(int x, int z) {
     Chunk chunk = new Chunk(x, z);
     chunks.put(key(x, z), chunk);
-    chunk.generateTiles(loader);
+    chunk.generateTiles(loader, updater);
 
     ByteBuffer mesh = ChunkMeshBuilder.build(chunk);
     updater.store(chunk, mesh);
+  }
+
+  public void unloadChunk(Chunk chunk) {
+    Chunk removedChunk = chunks.remove(chunk.getKey());
+    if (removedChunk != null)
+      updater.remove(removedChunk);
+
   }
 
   public void unloadChunk(int x, int z) {
