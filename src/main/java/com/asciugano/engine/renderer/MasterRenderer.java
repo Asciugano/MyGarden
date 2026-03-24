@@ -72,15 +72,15 @@ public class MasterRenderer {
     shader.stop();
   }
 
-  private void renderTile(Light light, Camera camera) {
-    tileShader.start();
-    tileShader.loadViewMatrix(camera);
-    tileShader.loadLight(light);
-
-    tileRenderer.render(tiles);
-
-    tileShader.stop();
-  }
+  // private void renderTile(Light light, Camera camera) {
+  // tileShader.start();
+  // tileShader.loadViewMatrix(camera);
+  // tileShader.loadLight(light);
+  //
+  // tileRenderer.render(tiles);
+  //
+  // tileShader.stop();
+  // }
 
   private void renderChunk(Light light, Camera camera) {
     tileShader.start();

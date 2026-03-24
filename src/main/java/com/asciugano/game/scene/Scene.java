@@ -31,7 +31,7 @@ public class Scene {
   private MousePicker mousePicker;
   private TileSelector tileSelector;
 
-  private EntityManager entityManager = new EntityManager();
+  public EntityManager entityManager = new EntityManager();
 
   public Scene(Loader loader) {
     camera = new Camera();
@@ -80,11 +80,11 @@ public class Scene {
   public void update(float dt) {
     mousePicker.update();
     camera.move();
-    for (UIEntity uiEntity : uis) {
-      if (uiEntity == tileSelector)
-        tileSelector.update(dt, mousePicker.getCurrentTile());
-      uiEntity.update(dt);
-    }
+    // for (UIEntity uiEntity : uis) {
+    // if (uiEntity == tileSelector)
+    // tileSelector.update(dt, mousePicker.getCurrentTile());
+    // uiEntity.update(dt);
+    // }
 
     for (Entity entity : entities) {
       entity.update();

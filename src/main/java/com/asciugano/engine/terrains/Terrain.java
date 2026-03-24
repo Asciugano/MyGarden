@@ -35,11 +35,12 @@ public class Terrain {
     updater = new VBOMemoryUpdater<>(mesh, mapper);
     manager = new ChunkManager(updater, loader);
 
-    for (int x = 0; x < SIZE; x++) {
-      for (int z = 0; z < SIZE; z++) {
-        manager.loadChunk(x, z);
-      }
-    }
+    manager.loadChunk(16, 16);
+    // for (int x = 0; x < SIZE; x++) {
+    // for (int z = 0; z < SIZE; z++) {
+    // manager.loadChunk(x, z);
+    // }
+    // }
   }
 
   public TerrainTile getTileFormWorld(Vector3f pos) {

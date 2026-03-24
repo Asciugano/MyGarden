@@ -1,5 +1,6 @@
 package com.asciugano.engine.entities;
 
+import com.asciugano.engine.components.Component;
 import com.asciugano.engine.components.ComponentType;
 import com.asciugano.engine.components.EntityTransform;
 import com.asciugano.game.scene.Scene;
@@ -43,8 +44,9 @@ public class Blueprint {
 
   private ComponentBundle createEntityComponents(Entity entity, ComponentParams... params) {
     ComponentBundle bundle = new ComponentBundle(params);
-    for (ComponentBlueprint component : components.values()) {
-      bundle.addComponent(component.create(component, bundle));
+    for (ComponentBlueprint<?> blueprint : components.values()) {
+      Component component = blueprint.create(entity, params);
+      bundle.addComponent(component);
     }
     return bundle;
   }
